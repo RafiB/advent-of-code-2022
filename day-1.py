@@ -2251,20 +2251,18 @@ PUZZLE_INPUT = """2000
 
 def solve(puzzle_input):
     currCalories = 0
-    maxCalories = float("-infinity")
+    elfCalories = []
     for line in puzzle_input.split("\n"):
         if line != "":
             currCalories += int(line)
         else:
-            if currCalories > maxCalories:
-                maxCalories = currCalories
+            elfCalories.append(currCalories)
             currCalories = 0
 
-    if currCalories > maxCalories:
-        maxCalories = currCalories
+    elfCalories.append(currCalories)
 
-    return maxCalories
+    return sum(sorted(elfCalories)[-3:])
 
 if __name__ == '__main__':
-    assert solve(TEST_INPUT) == 24000, solve(TEST_INPUT)
+    assert solve(TEST_INPUT) == 45000, solve(TEST_INPUT)
     print(solve(PUZZLE_INPUT))
