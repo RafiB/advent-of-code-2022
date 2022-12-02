@@ -2511,38 +2511,49 @@ OPP_ROCK = 'A'
 OPP_PAPER = 'B'
 OPP_SCISSORS = 'C'
 
+RESULT_STRATEGY = {
+    'X': {
+        OPP_SCISSORS: PAPER,
+        OPP_PAPER: ROCK,
+        OPP_ROCK: SCISSORS,
+    },
+    'Y': {
+        OPP_SCISSORS: SCISSORS,
+        OPP_PAPER: PAPER,
+        OPP_ROCK: ROCK,
+    },
+    'Z': {
+        OPP_SCISSORS: ROCK,
+        OPP_PAPER: SCISSORS,
+        OPP_ROCK: PAPER,
+    }
+}
+
+PLAY_SCORE = {
+    ROCK: 1,
+    PAPER: 2,
+    SCISSORS: 3
+}
+
+RESULT_SCORE = {
+    (False, False, True): 0,
+    (False, True, False): 3,
+    (True, False, False): 6,
+}
+
 def solve(puzzle_input):
     score = 0
     for line in puzzle_input.split("\n"):
         opp, res = line.split(" ")
 
-        if res == 'X':
-            if opp == OPP_SCISSORS:
-                me = PAPER
-            elif opp == OPP_PAPER:
-                me = ROCK
-            else:
-                me = SCISSORS
-        elif res == 'Y':
-            if opp == OPP_SCISSORS:
-                me = SCISSORS
-            elif opp == OPP_PAPER:
-                me = PAPER
-            else:
-                me = ROCK
-        else:
-            if opp == OPP_SCISSORS:
-                me = ROCK
-            elif opp == OPP_PAPER:
-                me = SCISSORS
-            else:
-                me = PAPER
+        me = RESULT_STRATEGY[res][opp]
 
         i_win = (opp == OPP_SCISSORS and me == ROCK) or (opp == OPP_PAPER and me == SCISSORS) or (opp == OPP_ROCK and me == PAPER)
         i_draw = (opp == OPP_SCISSORS and me == SCISSORS) or (opp == OPP_PAPER and me == PAPER) or (opp == OPP_ROCK and me == ROCK)
         i_lose = not (i_win or i_draw)
-        play_score = 1 if me == ROCK else 2 if me == PAPER else 3
-        result_score = 0 if i_lose else 3 if i_draw else 6
+
+        play_score = PLAY_SCORE[me]
+        result_score = RESULT_SCORE[(i_win, i_draw, i_lose)]
         score += play_score + result_score
 
     return score
