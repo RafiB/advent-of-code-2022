@@ -2514,7 +2514,30 @@ OPP_SCISSORS = 'C'
 def solve(puzzle_input):
     score = 0
     for line in puzzle_input.split("\n"):
-        opp, me = line.split(" ")
+        opp, res = line.split(" ")
+
+        if res == 'X':
+            if opp == OPP_SCISSORS:
+                me = PAPER
+            elif opp == OPP_PAPER:
+                me = ROCK
+            else:
+                me = SCISSORS
+        elif res == 'Y':
+            if opp == OPP_SCISSORS:
+                me = SCISSORS
+            elif opp == OPP_PAPER:
+                me = PAPER
+            else:
+                me = ROCK
+        else:
+            if opp == OPP_SCISSORS:
+                me = ROCK
+            elif opp == OPP_PAPER:
+                me = SCISSORS
+            else:
+                me = PAPER
+
         i_win = (opp == OPP_SCISSORS and me == ROCK) or (opp == OPP_PAPER and me == SCISSORS) or (opp == OPP_ROCK and me == PAPER)
         i_draw = (opp == OPP_SCISSORS and me == SCISSORS) or (opp == OPP_PAPER and me == PAPER) or (opp == OPP_ROCK and me == ROCK)
         i_lose = not (i_win or i_draw)
@@ -2525,5 +2548,5 @@ def solve(puzzle_input):
     return score
 
 if __name__ == "__main__":
-    assert solve(TEST_INPUT) == 15, solve(TEST_INPUT)
+    assert solve(TEST_INPUT) == 12, solve(TEST_INPUT)
     print(solve(PUZZLE_INPUT))
