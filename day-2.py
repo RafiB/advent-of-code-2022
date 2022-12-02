@@ -2511,18 +2511,22 @@ OPP_ROCK = 'A'
 OPP_PAPER = 'B'
 OPP_SCISSORS = 'C'
 
+LOSE = 'X'
+DRAW = 'Y'
+WIN = 'Z'
+
 RESULT_STRATEGY = {
-    'X': {
+    LOSE: {
         OPP_SCISSORS: PAPER,
         OPP_PAPER: ROCK,
         OPP_ROCK: SCISSORS,
     },
-    'Y': {
+    DRAW: {
         OPP_SCISSORS: SCISSORS,
         OPP_PAPER: PAPER,
         OPP_ROCK: ROCK,
     },
-    'Z': {
+    WIN: {
         OPP_SCISSORS: ROCK,
         OPP_PAPER: SCISSORS,
         OPP_ROCK: PAPER,
@@ -2548,9 +2552,9 @@ def solve(puzzle_input):
 
         me = RESULT_STRATEGY[res][opp]
 
-        i_win = (opp == OPP_SCISSORS and me == ROCK) or (opp == OPP_PAPER and me == SCISSORS) or (opp == OPP_ROCK and me == PAPER)
-        i_draw = (opp == OPP_SCISSORS and me == SCISSORS) or (opp == OPP_PAPER and me == PAPER) or (opp == OPP_ROCK and me == ROCK)
-        i_lose = not (i_win or i_draw)
+        i_win = me == RESULT_STRATEGY[WIN][opp]
+        i_draw = me == RESULT_STRATEGY[DRAW][opp]
+        i_lose = me == RESULT_STRATEGY[LOSE][opp]
 
         play_score = PLAY_SCORE[me]
         result_score = RESULT_SCORE[(i_win, i_draw, i_lose)]
