@@ -2552,9 +2552,9 @@ def solve(puzzle_input):
 
         me = RESULT_STRATEGY[res][opp]
 
-        i_win = me == RESULT_STRATEGY[WIN][opp]
-        i_draw = me == RESULT_STRATEGY[DRAW][opp]
-        i_lose = me == RESULT_STRATEGY[LOSE][opp]
+        i_win = res == WIN
+        i_draw = res == DRAW
+        i_lose = res == LOSE
 
         play_score = PLAY_SCORE[me]
         result_score = RESULT_SCORE[(i_win, i_draw, i_lose)]
