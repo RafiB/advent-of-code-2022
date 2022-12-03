@@ -309,19 +309,24 @@ qrlZCwlqZrqqpWdlRqCRqdqcVNsVMzQzmNgNPBsRhVQVVzMs"""
 
 def solve(puzzle_input):
     res = 0
-    for line in puzzle_input.split("\n"):
-        p = int(len(line) / 2)
-        c1, c2 = line[:p], line[p:]
+    lines = puzzle_input.split("\n")
+    i = 0
+    while i < len(lines):
+        g = []
+        for j in range(3):
+            g.append(set(lines[i]))
+            i += 1
+        c = (g[0] & g[1] & g[2]).pop()
 
-        c = (set(c1) & set(c2)).pop()
         if ord(c) >= ord("a"):
             priority = 1 + ord(c) - ord("a")
         else:
             priority = 27 + ord(c) - ord("A")
 
         res += priority
+
     return res
 
 if __name__ == "__main__":
-    assert solve(TEST_INPUT) == 157, solve(TEST_INPUT)
+    assert solve(TEST_INPUT) == 70, solve(TEST_INPUT)
     print(solve(PUZZLE_INPUT))
