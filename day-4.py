@@ -1015,11 +1015,13 @@ def solve(puzzle_input):
         r1a, r1b = list(map(int, r1.split("-")))
         r2a, r2b = list(map(int, r2.split("-")))
 
-        if (r1a >= r2a and r1b <= r2b) or (r2a >= r1a and r2b <= r1b):
+        if (r1a >= r2a and r1a <= r2b) or (r1b >= r2a and r1b <= r2b):
+            res += 1
+        elif (r2a >= r1a and r2a <= r1b) or (r2b >= r1a and r2b <= r1b):
             res += 1
 
     return res
 
 if __name__ == "__main__":
-    assert solve(TEST_INPUT) == 2, solve(TEST_INPUT)
+    assert solve(TEST_INPUT) == 4, solve(TEST_INPUT)
     print(solve(PUZZLE_INPUT))
