@@ -548,11 +548,14 @@ def solve(puzzle_input):
 
     for instruction in instructions.split("\n"):
         _, count, _, f, _, t = instruction.split(" ")
+        accum = []
         for c in range(int(count)):
-            state[int(t) - 1].append(state[int(f) - 1].pop())
+            accum.append(state[int(f) - 1].pop())
+        for i in range(int(count)):
+            state[int(t) - 1].append(accum.pop())
 
     return ''.join([s[-1][1] for s in state])
 
 if __name__ == "__main__":
-    assert solve(TEST_INPUT) == "CMZ", solve(TEST_INPUT)
+    assert solve(TEST_INPUT) == "MCD", solve(TEST_INPUT)
     print(solve(PUZZLE_INPUT))
