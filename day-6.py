@@ -4,11 +4,11 @@ PUZZLE_INPUT = """mvwvrwvwbblffmvmhmllmzmqzzbhbnnvrnvnmvvqrqrccpsstvvshvvpvvpddz
 def solve(puzzle_input):
     i = 0
     while True:
-        if i >= 4 and len(list(set(puzzle_input[i-4:i]))) == 4:
+        if i >= 14 and len(list(set(puzzle_input[i-14:i]))) == 14:
             return i
         i += 1
 
 
 if __name__ == "__main__":
-    assert solve(TEST_INPUT) == 7, solve(TEST_INPUT)
+    assert solve(TEST_INPUT) == 19, solve(TEST_INPUT)
     print(solve(PUZZLE_INPUT))
