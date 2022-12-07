@@ -1050,6 +1050,7 @@ def calculate_sizes(node):
 
         node.size += n.size
 
+STORAGE_CAPACITY = 70000000
 
 def solve(puzzle_input):
     NAME_TO_NODE = {}
@@ -1088,18 +1089,20 @@ def solve(puzzle_input):
 
     calculate_sizes(root)
 
-    res = 0
+    free_space = STORAGE_CAPACITY - root.size
+
+    res = float('inf')
     q = [root]
     while len(q) > 0:
         n = q.pop(0)
         for c in n.children:
             if isinstance(c, Dir):
-                if c.size <= 100000:
-                    res += c.size
+                if free_space + c.size >= 30000000 and c.size < res:
+                    res = c.size
                 q.append(c)
 
     return res
 
 if __name__ == "__main__":
-    assert solve(TEST_INPUT) == 95437, solve(TEST_INPUT)
+    assert solve(TEST_INPUT) == 24933642, solve(TEST_INPUT)
     print(solve(PUZZLE_INPUT))
