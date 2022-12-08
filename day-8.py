@@ -112,29 +112,23 @@ def solve(puzzle_input):
 
     for i, row in enumerate(tree_map):
         for j, t in enumerate(row):
-            visible = True
-            if i == 0 or j == 0 or i == len(tree_map) -1 or j == len(row) - 1:
-                pass
-            else:
-                vs = []
-                for (di, dj) in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-                    vss = True
-                    dii = i + di
-                    djj = j + dj
-                    while dii >= 0 and dii < len(tree_map) and djj >= 0 and djj < len(row):
-                        if tree_map[dii][djj] >= t:
-                            vss = False
-                            break
-                        dii += di
-                        djj += dj
-                    vs.append(vss)
-                visible = any(vs)
+            score = 1
+            for (di, dj) in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                dscore = 0
+                dii = i + di
+                djj = j + dj
+                while dii >= 0 and dii < len(tree_map) and djj >= 0 and djj < len(row):
+                    dscore += 1
+                    if tree_map[dii][djj] >= t:
+                        break
+                    dii += di
+                    djj += dj
+                score *= dscore
 
-            if visible:
-                res += 1
+            res = max(score, res)
 
     return res
 
 if __name__ == "__main__":
-    assert solve(TEST_INPUT) == 21, solve(TEST_INPUT)
+    assert solve(TEST_INPUT) == 8, solve(TEST_INPUT)
     print(solve(PUZZLE_INPUT))
