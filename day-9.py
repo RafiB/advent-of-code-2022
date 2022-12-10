@@ -2008,6 +2008,15 @@ L 17
 R 9
 L 10"""
 
+TEST_INPUT_2 = """R 5
+U 8
+L 8
+D 3
+R 17
+D 10
+L 25
+U 20"""
+
 D = {
     'R': (0, 1),
     'U': (1, 0),
@@ -2015,40 +2024,57 @@ D = {
     'D': (-1, 0),
 }
 
+class Node(object):
+    def __init__(self, i, prev):
+        self.id = i
+        self.x = 0
+        self.y = 0
+        self.prev = prev
+        self.next = None
+
+
 def solve(puzzle_input):
     locations = set()
 
-    H = (0, 0)
-    T = (0, 0)
-    locations.add(T)
+    H = None
+    T = None
+    p = None
+    for i in range(10):
+        n = Node(i, p)
+        p = n
+        if n.prev != None:
+            n.prev.next = n
+        if H == None:
+            H = n
+        T = n
+
+    locations.add((T.y, T.x))
 
     for line in puzzle_input.split("\n"):
         d, n = line.split(" ")
         n = int(n)
 
-        dx, dy = D[d]
-        y, x = H
+        dy, dx = D[d]
         for i in range(n):
-            x += dx
-            y += dy
-            H = (y, x)
-            if T[0] == H[0]:
-                if H[1] > T[1] + 1:
-                    T = (H[0] - dy, H[1] - dx)
-                elif H[1] < T[1] - 1:
-                    T = (H[0] - dy, H[1] - dx)
-            elif T[1] == H[1]:
-                if H[0] > T[0] + 1:
-                    T = (H[0] - dy, H[1] - dx)
-                elif H[0] < T[0] - 1:
-                    T = (H[0] - dy, H[1] - dx)
-            elif abs(T[1] - H[1]) + abs(T[0] - H[0]) > 2:
-                T = (H[0] - dy, H[1] - dx)
-            locations.add(T)
+            H.x += dx
+            H.y += dy
+
+            curr = H.next
+            while curr != None:
+                leader = curr.prev
+
+                delta = (leader.y - curr.y, leader.x - curr.x)
+                if 2 in delta or -2 in delta:
+                    curr.y += (delta[0] / 2) if delta[0] in (2, -2) else delta[0]
+                    curr.x += (delta[1] / 2) if delta[1] in (2, -2) else delta[1]
+
+                curr = curr.next
+
+            locations.add((T.y, T.x))
 
     return len(locations)
 
 
 if __name__ == "__main__":
-    assert solve(TEST_INPUT) == 13, solve(TEST_INPUT)
+    assert solve(TEST_INPUT_2) == 36, solve(TEST_INPUT)
     print(solve(PUZZLE_INPUT))
