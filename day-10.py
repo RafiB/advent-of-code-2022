@@ -291,23 +291,28 @@ noop"""
 
 
 def solve(puzzle_input):
-    V = 1
+    V = 0
     res = 0
     cycle = 0
     lines = puzzle_input.split("\n")
     i = 0
     wake = None
     to_add = None
+    rows = []
+    row = ""
     while i < len(lines):
-        if cycle == 20 or (cycle > 20 and (cycle-20) % 40 == 0):
-            res += cycle * V
+        if cycle > 0 and cycle % 40 == 0:
+            rows.append(row)
+            row = ""
 
         if wake != None and cycle < wake:
+            row += ('#' if V <= (cycle % 40) < V + 3 else ' ')
             cycle += 1
             continue
         if to_add != None:
             V += to_add
             to_add = None
+        row += ('#' if V <= (cycle % 40) < V + 3 else ' ')
 
         line = lines[i]
         i += 1
@@ -320,9 +325,20 @@ def solve(puzzle_input):
             to_add = d
             wake = cycle + 2
         cycle += 1
-    return res
+    rows.append(row)
+
+    for r in rows:
+        print(r)
+
+    return rows
 
 
 if __name__ == "__main__":
-    assert solve(TEST_INPUT) == 13140, solve(TEST_INPUT)
-    print(solve(PUZZLE_INPUT))
+    # for i, line in enumerate(solve(TEST_INPUT)):
+    #     assert line == """##  ##  ##  ##  ##  ##  ##  ##  ##  ##  
+# ###   ###   ###   ###   ###   ###   ### 
+# ####    ####    ####    ####    ####    
+# #####     #####     #####     #####     
+# ######      ######      ######      ####
+# #######       #######       #######     """.split("\n")[i], (i, line)
+    solve(PUZZLE_INPUT)
