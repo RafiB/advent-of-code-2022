@@ -108,6 +108,7 @@ class Multiply(object):
 def solve(puzzle_input):
     monkeys = {}
     handled = {}
+    cm = 1
 
     for monkey_def in puzzle_input.split("\n\n"):
         def_lines = monkey_def.split("\n")
@@ -129,6 +130,7 @@ def solve(puzzle_input):
             op = Multiply(lhs, rhs)
 
         test = int(def_lines[3].split(" ")[-1])
+        cm *= test
 
         yes_i = int(def_lines[4].split(" ")[-1])
         no_i = int(def_lines[5].split(" ")[-1])
@@ -138,19 +140,21 @@ def solve(puzzle_input):
         monkeys[i] = (items, op, test, yes_i, no_i)
         handled[i] = 0
 
-    for i in range(20):
+    for i in range(10000):
+        if i % 20 == 0:
+            print(i, handled)
         for i in range(len(monkeys)):
             instr = monkeys[i]
 
             for item in instr[0]:
                 handled[i] += 1
-                worry_level = instr[1].on(item) // 3
+                worry_level = instr[1].on(item)
                 if worry_level % instr[2] == 0:
                     dest = instr[3]
                 else:
                     dest = instr[4]
                 (t_items, t_op, t_test, t_yes_i, t_no_i) = monkeys[dest]
-                monkeys[dest] = (t_items + [worry_level], t_op, t_test, t_yes_i, t_no_i)
+                monkeys[dest] = (t_items + [worry_level % cm], t_op, t_test, t_yes_i, t_no_i)
 
             monkeys[i] = ([], instr[1], instr[2], instr[3], instr[4])
 
@@ -159,5 +163,5 @@ def solve(puzzle_input):
 
 
 if __name__ == "__main__":
-    assert solve(TEST_INPUT) == 10605, solve(TEST_INPUT)
+    assert solve(TEST_INPUT) == 2713310158, solve(TEST_INPUT)
     print(solve(PUZZLE_INPUT))
