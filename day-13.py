@@ -1,4 +1,5 @@
 import json
+import functools
 
 TEST_INPUT = """[1,1,3,1,1]
 [1,1,5,1,1]
@@ -479,47 +480,45 @@ def isInOrder(l, r):
         i = 0
         while True:
             if i >= len(l) and i < len(r):
-                return "yes"
+                return -1
             if i == 0 and i == len(l) and i == len(r):
-                return "eq"
+                return 0
             if i >= len(l) and i == len(r) and l[i-1] == r[i-1]:
-                return "eq"
+                return 0
             if i >= len(r):
-                return "no"
+                return 1
             order = isInOrder(l[i], r[i])
-            if order != "eq":
+            if order != 0:
                 return order
             i += 1
-        return "eq"
+        return 0
     elif isinstance(l, list) and not isinstance(r, list):
         order = isInOrder(l, [r])
-        if order != "eq":
-            return order
+        return order
     elif isinstance(r, list) and not isinstance(l, list):
         order = isInOrder([l], r)
-        if order != "eq":
-            return order
+        return order
     else:
         if l < r:
-            return "yes"
+            return -1
         if l == r:
-            return "eq"
-        return "no"
+            return 0
+        return 1
 
 def solve(puzzle_input):
     res = 0
 
-    for i, packet_pair in enumerate(puzzle_input.split("\n\n")):
-        left, right = packet_pair.split("\n")
-        left = json.loads(left)
-        right = json.loads(right)
+    packets = [ [[2]], [[6]] ]
 
-        order = isInOrder(left, right)
-        if order == "yes":
-            res += i + 1
+    for i, packet in enumerate(puzzle_input.split("\n")):
+        if packet == "":
+            continue
+        packets.append(json.loads(packet))
 
-    return res
+    s = sorted(packets, key=functools.cmp_to_key(isInOrder))
+
+    return (s.index([[2]]) + 1) * (s.index([[6]]) + 1)
 
 if __name__ == "__main__":
-    assert solve(TEST_INPUT) == 13, solve(TEST_INPUT)
+    assert solve(TEST_INPUT) == 140, solve(TEST_INPUT)
     print(solve(PUZZLE_INPUT))
