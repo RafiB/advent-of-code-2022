@@ -171,31 +171,21 @@ def solve(puzzle_input):
 
     minY = float('inf')
     maxY = float('-inf')
-    minX = float('inf')
-    maxX = float('-inf')
     for c in M:
         x, y = c
         minY = min(minY, y)
         maxY = max(maxY, y)
-        minX = min(minX, x)
-        maxX = max(maxX, x)
+
+    maxY += 2
 
     sand = 0
     while True:
         cx, cy = 500, 0
 
-        rest = True
-
         while True:
-            if cy > maxY or cx < minX or cx > maxX:
-                rest = False
-                break
-
             found = False
             for nextX, nextY in ((cx, cy+1), (cx-1, cy+1), (cx+1, cy+1)):
-                if found:
-                    break
-                if (nextX, nextY) not in M:
+                if (nextX, nextY) not in M and nextY < maxY:
                     cx, cy = nextX, nextY
                     found = True
                     break
@@ -203,18 +193,15 @@ def solve(puzzle_input):
             if not found:
                 break
 
-        if rest:
-            M[(cx, cy)] = 'o'
-
-
-        if not rest:
-            break
+        M[(cx, cy)] = 'o'
 
         sand += 1
+        if (cx, cy) == (500, 0):
+            break
 
     return sand
 
 
 if __name__ == "__main__":
-    assert solve(TEST_INPUT) == 24, solve(TEST_INPUT)
+    assert solve(TEST_INPUT) == 93, solve(TEST_INPUT)
     print(solve(PUZZLE_INPUT))
