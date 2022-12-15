@@ -44,8 +44,8 @@ Sensor at x=675279, y=1463916: closest beacon is at x=2163809, y=1961540
 Sensor at x=3989603, y=3500749: closest beacon is at x=3872908, y=3598272
 Sensor at x=1963470, y=2288355: closest beacon is at x=2163809, y=1961540"""
 
-def solve(puzzle_input, solve_line):
-    CLOSEST_BEACONS = {}
+def solve(puzzle_input, solve_line, maxc):
+    S_DISTS = {}
     for line in puzzle_input.split("\n"):
         l, r = line.split(": ")
         l = l.split(" ")[-2:]
@@ -56,26 +56,23 @@ def solve(puzzle_input, solve_line):
         bx, by = r[0], int(r[1].split("=")[1])
         bx = int(bx[:-1].split("=")[1])
 
-        CLOSEST_BEACONS[(sx, sy)] = (bx, by)
+        S_DISTS[(sx, sy)] = abs(sx - bx) + abs(sy - by)
 
-    CANNOT_BE = set()
-    for s in CLOSEST_BEACONS:
-        b = CLOSEST_BEACONS[s]
-        manhattan_distance = abs(s[0] - b[0]) + abs(s[1] - b[1])
+    for s, max_distance in S_DISTS.items():
+        for x, y in zip(
+            range(max(s[0] - max_distance - 1, 0), min(maxc, s[0]) + 1),
+            range(max(s[1], 0), maxc + 1)
+        ):
+            if all(
+                [
+                    abs(sensor[0] - x) + abs(sensor[1] - y) > sensor_dist
+                    for sensor, sensor_dist in S_DISTS.items()
+                ]
+            ):
+                return x * 4000000 + y
 
-        x, y = s
-        if abs(y - solve_line) > manhattan_distance:
-            continue
-
-        for dx in range(manhattan_distance - abs(y - solve_line) + 1):
-            assert 1 <= abs(dx) + abs(y - solve_line) and abs(dx) + abs(y - solve_line) <= manhattan_distance
-            CANNOT_BE.add(s[0] - dx)
-            CANNOT_BE.add(s[0] + dx)
-
-
-    return len(CANNOT_BE) - 1
 
 
 if __name__ == "__main__":
-    assert solve(TEST_INPUT, 10) == 26, solve(TEST_INPUT, 10)
-    print(solve(PUZZLE_INPUT, 2000000))
+    assert solve(TEST_INPUT, 10, 20) == 56000011, solve(TEST_INPUT, 10, 20)
+    print(solve(PUZZLE_INPUT, 2000000, 4000000))
